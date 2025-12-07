@@ -4,27 +4,20 @@
 typedef struct pedido Pedido;
 
 // basicas
-Pedido* cadastrarPedido(int idPedido, char observacao[40], char nome[40]);
+Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], char nomePedido[] ,double valor);
 void  excluirPedido(Pedido* ptr_p);
-
 Pedido* buscarPedido(int idPedido);
 void imprimirPedido(const Pedido* ptr_p);
 
-// movimentações
-// void depositar(ContaBancaria* conta, double valor);
-// void sacar(ContaBancaria* conta, double valor);
-// void transferir(ContaBancaria* origem, ContaBancaria* destino, double valor);
+//getters
+int obterIdPedido(Pedido* ptr_p);
+const char* obterObservacao(const Pedido* ptr_p);
+const char* obterNomeCliente(const Pedido* ptr_p);
+const char* obterNomePedido(const Pedido* ptr_p);
 
-// informações
-// double obterSaldo(const ContaBancaria* conta);
-// int obterNumero(const ContaBancaria* conta);
-// void imprimirConta(const ContaBancaria *conta);
-// int compararContasNumero(const ContaBancaria* conta1, const ContaBancaria* conta2);
-// int compararContasSaldo(const ContaBancaria* conta1, const ContaBancaria* conta2);
-
-// genéricas
-// void imprimirContaGenerico(const void* conta);
-// void compararContasNumGenerico(const void* conta1, const void* conta2);
-// void compararContasSaldoGenerico(const void* conta1, const void* conta2);
+//setters
+void alterarObservacao(Pedido* ptr_p, const char novaObs[]);
+void alterarNomeCliente(Pedido* ptr_p, const char novoNome[]);
+void alterarValor(Pedido* ptr_p, double novoValor);
 
 #endif
