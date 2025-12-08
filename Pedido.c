@@ -10,13 +10,17 @@ struct pedido {
     char* nomeCliente;
     char* nomePedido; 
     double valor;
+    int* prioridades;    // to usando vetor dinâmico pra conseguir dar realloc
+    int qtdPrioridades; 
 };
 
-Pedido* cadastrarPedido(int idPedido, const char observacao[], const char nomeCliente[],const char nomePedido[],double valor) 
+Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], char nomePedido[],double valor) 
 {
     Pedido* ptr_p = (Pedido*) malloc(sizeof(Pedido));
     if (!ptr_p) return NULL;
 
+    ptr_p->prioridades = NULL;   
+    ptr_p->qtdPrioridades = 0; 
     ptr_p->idPedido = idPedido;
     ptr_p->valor = valor;
 
@@ -113,6 +117,50 @@ void alterarNomePedido(Pedido* ptr_p, const char novoNome[]) {
 void alterarValor(Pedido* ptr_p, double novoValor) {
     if (!ptr_p) return;
     ptr_p->valor = novoValor;
+}
+
+
+void adicionarPrioridade(Pedido* ptr_p, int** prioridades, int* qtdPrioridades) {
+    // +1
+    int* novaLista = realloc(*prioridades, (*qtdPrioridades + 1) * sizeof(int));
+    if (!novaLista) return;
+
+    *prioridades = novaLista;
+
+    (*prioridades)[*qtdPrioridades] = ptr_p->idPedido;
+    (*qtdPrioridades)++;
+}
+
+void removerPrioridade(int id, int** prioridades, int* qtdPrioridades) {
+    int pos = -1;
+
+    for (int i = 0; i < *qtdPrioridades; i++) {
+        if ((*prioridades)[i] == id) {
+            pos = i;
+            break;
+        }
+    }
+
+    if (pos == -1) return;
+
+    //move pra esquerd
+    for (int i = pos; i < *qtdPrioridades - 1; i++) {
+        (*prioridades)[i] = (*prioridades)[i + 1];
+    }
+
+    (*qtdPrioridades)--;
+
+    if (*qtdPrioridades == 0) {
+        free(*prioridades);
+        *prioridades = NULL;
+        return;
+    }
+
+    // reduz o tamanho do vet
+    int* novaLista = realloc(*prioridades, (*qtdPrioridades) * sizeof(int));
+    if (novaLista) {
+        *prioridades = novaLista;
+    }
 }
 
 void imprimirPedido(const Pedido* ptr_p) {
