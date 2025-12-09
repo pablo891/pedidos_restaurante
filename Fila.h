@@ -1,28 +1,24 @@
-// Guardas para evitar inclusões múltiplas
-#ifndef LISTA_ENC_H
-#define LISTA_ENC_H
-#include "Pedido.h"
+#ifndef FILA_H
+#define FILA_H
 
-// Estrutura opaca
-typedef struct t_lista_enc ListaEnc;
+typedef struct fila Fila;
 
-// Funções básicas
-ListaEnc* criar(int capacidade);
-void liberar(ListaEnc* lista);
+Fila* criar_fila();
 
-// Manipulação da lista
-int inserir(ListaEnc* lista, void* c);
-int remover(ListaEnc* lista, int posicao);
-void* obter(ListaEnc* lista, int posicao);
+void destruir_fila(Fila* f);
 
-// Informações sobre a lista
-int cheia(ListaEnc* lista);
-int vazia(ListaEnc* lista);
-int tamanho(ListaEnc* lista);
-int capacidade(ListaEnc* lista);
+int enfileirar(Fila* f, void* elemento);
 
-// Outras
-// Função para imprimir os elementos da lista usando ponteiro para função
-void imprimir(ListaEnc* lista, void (*imprimir_dado)(const void* dado));
+void* desenfileirar(Fila* f);
 
-#endif // LISTA_CONTAS_ENC_H
+int vazia(Fila* f);
+
+int cheia(Fila* f);
+
+int tamanho(Fila* f);
+
+void* primeiro_fila(Fila* f);
+
+void imprimir_fila(Fila* f, void (*imprime_elemento)(void*));
+
+#endif

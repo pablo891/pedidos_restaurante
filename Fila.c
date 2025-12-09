@@ -1,122 +1,105 @@
-// implementa lista encadeada genérica
-#include <stdio.h>
 #include <stdlib.h>
-#include "Fila.h"
+#include "fila.h"
 
-// Definição do nó da lista
-typedef struct t_no {
-    void* dado; // ponteiro genérico para qualquer tipo de dado
-    struct t_no* prox;
-} No;
+typedef struct nodo {
+    void* info;        
+    struct nodo* prox;  
+} Nodo;
 
-// Definição da estrutura da lista encadeada
-struct t_lista_enc {
-    No* primeiro;
-    No* ultimo;
-    int tamanho;
-    int capacidade; // capacidade máxima da lista
+struct fila {
+    Nodo* inicio;  
+    Nodo* fim; 
+    int qtd; 
 };
 
-// Funções básicas
-ListaEnc* criar(int capacidade) {
-    ListaEnc* lista = (ListaEnc*)malloc(sizeof(ListaEnc));
-    lista->primeiro = NULL;
-    lista->ultimo = NULL;
-    lista->tamanho = 0;
-    lista->capacidade = capacidade;
-    return lista;
+Fila* criar_fila() {
+    Fila* f = (Fila*) malloc(sizeof(Fila));
+    if (f != NULL) {
+        f->inicio = NULL;
+        f->fim = NULL;
+        f->qtd = 0;
+    }
+    return f;
 }
-void liberar(ListaEnc* lista) {
-    No* atual = lista->primeiro;
+
+void destruir_fila(Fila* f) {
+    if (f == NULL) return;
+
+    Nodo* atual = f->inicio;
     while (atual != NULL) {
-        No* temp = atual;
+        Nodo* temp = atual;
         atual = atual->prox;
-        free(temp);
+        free(temp); 
     }
-    free(lista);
-}   
+    free(f); 
+}
 
-// Manipulação da lista
-int inserir(ListaEnc* lista, void* dado) {
-    if (lista->tamanho >= lista->capacidade) {
-        return 0; // lista cheia
-    }
-    No* novo_no = (No*)malloc(sizeof(No));
-    novo_no->dado = dado;
-    novo_no->prox = NULL;
-    if (lista->ultimo != NULL) {
-        lista->ultimo->prox = novo_no;
+int enfileirar(Fila* f, void* elemento) {
+    if (f == NULL) return 0;
+
+    Nodo* novo = (Nodo*) malloc(sizeof(Nodo));
+    if (novo == NULL) return 0; 
+
+    novo->info = elemento;
+    novo->prox = NULL;
+
+    if (f->fim == NULL) {
+        f->inicio = novo;
     } else {
-        lista->primeiro = novo_no;
+        f->fim->prox = novo; 
     }
-    lista->ultimo = novo_no;
-    lista->tamanho++;
-    return 1; // sucesso
-}
-int remover(ListaEnc* lista, int posicao) {
-    if (posicao < 0 || posicao >= lista->tamanho) {
-        return 0; // posição inválida
-    }
-    No* atual = lista->primeiro;
-    No* anterior = NULL;
-    for (int i = 0; i < posicao; i++) {
-        anterior = atual;
-        atual = atual->prox;
-    }
-    if (anterior != NULL) {
-        anterior->prox = atual->prox;
-    } else {
-        lista->primeiro = atual->prox;
-    }
-    if (atual == lista->ultimo) {
-        lista->ultimo = anterior;
-    }
-    free(atual);
-    lista->tamanho--;
-    return 1; // sucesso
+    
+    f->fim = novo; 
+    f->qtd++;
+    return 1;
 }
 
-// ATENCAO: esta funcao retorna um ponteiro generico (void*), que pode ser
-// convertido para qualquer tipo de dado conforme a necessidade do usuario.
-void* obter(ListaEnc* lista, int posicao) {
-    if (posicao < 0 || posicao >= lista->tamanho) {
-        return NULL; // posição inválida
+void* desenfileirar(Fila* f) {
+    if (f == NULL || f->inicio == NULL) return NULL;
+
+    Nodo* temp = f->inicio;
+    void* dado = temp->info;
+
+    f->inicio = f->inicio->prox; 
+    
+    if (f->inicio == NULL) {
+        f->fim = NULL;
     }
-    No* atual = lista->primeiro;
-    for (int i = 0; i < posicao; i++) {
-        atual = atual->prox;
+
+    free(temp); 
+    f->qtd--;
+    return dado;
+}
+
+int vazia(Fila* f) {
+    if (f == NULL) return 1;
+    return (f->inicio == NULL);
+}
+
+int cheia(Fila* f) {
+    return 0;
+}
+
+int tamanho(Fila* f) {
+    if (f == NULL) return 0;
+    return f->qtd;
+}
+
+void* primeiro_fila(Fila* f) {
+    if (f == NULL || f->inicio == NULL) return NULL;
+    return f->inicio->info;
+}
+
+void imprimir_fila(Fila* f, void (*imprime_elemento)(void*)) {
+    if (f == NULL || f->ini == NULL) {
+        printf("Fila vazia!\n");
+        return;
     }
-    return atual->dado;
-}   
 
-// Informações sobre a lista
-int cheia(ListaEnc* lista) {
-    return lista->tamanho >= lista->capacidade;
-}
-int vazia(ListaEnc* lista) {
-    return lista->tamanho == 0;     
-}
-int tamanho(ListaEnc* lista) {
-    return lista->tamanho;
-}
-int capacidade(ListaEnc* lista) {
-    return lista->capacidade;
-}   
-
-// Outras
-
-// Chama a função de impressão para cada elemento da lista generica
-// ATENCAO: este codigo usa um ponteiro para função como argumento. Um ponteiro
-// para função é uma variável que armazena o endereço de uma função, permitindo
-// que essa função seja chamada indiretamente. Neste caso, o ponteiro para função
-// 'imprimirDado' aponta para uma função que recebe um ponteiro genérico (void*)
-// e não retorna nada (void). Isso permite que a função 'imprimir' seja
-// genérica e possa imprimir qualquer tipo de dado, desde que uma função de
-// impressão apropriada seja fornecida. (Josenildo Silva, AED I - SI/IFMA, 2025)
-void imprimir(ListaEnc* lista, void (*imprimirDado)(const void*)) {
-    No* atual = lista->primeiro;
+    Nodo* atual = f->ini;
     while (atual != NULL) {
-        imprimirDado(atual->dado);
+        imprime_elemento(atual->info); 
         atual = atual->prox;
     }
 }
+
