@@ -64,8 +64,11 @@ void excluirPedido(Pedido* ptr_p){
     free(ptr_p);
 }
 
+
+
+
 int obterIdPedido(Pedido* ptr_p){
-    if(ptr_p ? ptr_p->idPedido : -1);
+    return (ptr_p ? ptr_p->idPedido : -1);
 }
 
 double obterValorPedido(const Pedido* ptr_p) {

@@ -1,5 +1,6 @@
+#include <stdio.h>
 #include <stdlib.h>
-#include "fila.h"
+#include "Fila.h"
 
 typedef struct nodo {
     void* info;        
