@@ -63,7 +63,20 @@ void excluirPedido(Pedido* ptr_p){
     free(ptr_p);
 }
 
+int buscarPedido(Pedido* ptr_p, int codigo){
+    if(ptr_p == NULL || ptr_p->quantidade ==0){
+        return -1;
+    }
 
+    for(int i=0;i<ptr_p->quantidade;i++){
+        Pedido* ptr_p = ptr_p->prods[i];
+        
+        if(getCodigo(ptr_p) == codigo){
+            return i;
+        }
+    }
+    return -1;
+}
 
 int obterIdPedido(Pedido* ptr_p){
     return (ptr_p ? ptr_p->idPedido : -1);
