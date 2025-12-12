@@ -91,12 +91,12 @@ void* primeiro_fila(Fila* f) {
 }
 
 void imprimir_fila(Fila* f, void (*imprime_elemento)(void*)) {
-    if (f == NULL || f->ini == NULL) {
+    if (f == NULL || f->inicio == NULL) {
         printf("Fila vazia!\n");
         return;
     }
 
-    Nodo* atual = f->ini;
+    Nodo* atual = f->inicio;
     while (atual != NULL) {
         imprime_elemento(atual->info); 
         atual = atual->prox;
