@@ -11,7 +11,7 @@ struct pedido {
     char* nomePedido; 
     double valor;
     int* prioridades;    // to usando vetor dinâmico pra conseguir dar realloc
-    int qtdPrioridades; 
+    int qtdPrioridades;
 };
 
 Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], char nomePedido[],double valor) 
@@ -24,7 +24,7 @@ Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], cha
     ptr_p->idPedido = idPedido;
     ptr_p->valor = valor;
 
-    //aloca e aloca
+
     ptr_p->observacao = malloc(strlen(observacao) + 1);
     if (!ptr_p->observacao) {
         free(ptr_p);
@@ -32,7 +32,6 @@ Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], cha
     }
     strcpy(ptr_p->observacao, observacao);
 
-    //alocando dnv
     ptr_p->nomeCliente = malloc(strlen(nomeCliente) + 1);
     if (!ptr_p->nomeCliente) {
         free(ptr_p->observacao);
@@ -41,7 +40,7 @@ Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], cha
     }
     strcpy(ptr_p->nomeCliente, nomeCliente);
 
-    //alocação kkkkkkkk
+
     ptr_p->nomePedido = malloc(strlen(nomePedido) + 1);
     if (!ptr_p->nomePedido) {
         free(ptr_p->observacao);
@@ -61,21 +60,6 @@ void excluirPedido(Pedido* ptr_p){
     free(ptr_p->nomeCliente);
     free(ptr_p->nomePedido);
     free(ptr_p);
-}
-
-int buscarPedido(Pedido* ptr_p, int codigo){
-    if(ptr_p == NULL || ptr_p->quantidade ==0){
-        return -1;
-    }
-
-    for(int i=0;i<ptr_p->quantidade;i++){
-        Pedido* ptr_p = ptr_p->prods[i];
-        
-        if(getCodigo(ptr_p) == codigo){
-            return i;
-        }
-    }
-    return -1;
 }
 
 int obterIdPedido(Pedido* ptr_p){
