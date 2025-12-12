@@ -54,7 +54,6 @@ Pedido* cadastrarPedido(int idPedido, char observacao[], char nomeCliente[], cha
     return ptr_p;
 }
 
-
 void excluirPedido(Pedido* ptr_p){
     if(ptr_p == NULL) return;
 
@@ -63,7 +62,6 @@ void excluirPedido(Pedido* ptr_p){
     free(ptr_p->nomePedido);
     free(ptr_p);
 }
-
 
 
 
