@@ -59,6 +59,7 @@ void excluirPedido(Pedido* ptr_p){
     free(ptr_p->observacao);
     free(ptr_p->nomeCliente);
     free(ptr_p->nomePedido);
+    free(ptr_p->prioridades);
     free(ptr_p);
 }
 
@@ -118,22 +119,29 @@ void alterarValor(Pedido* ptr_p, double novoValor) {
 }
 
 
-void adicionarPrioridade(Pedido* ptr_p, int** prioridades, int* qtdPrioridades) {
-    // +1
-    int* novaLista = realloc(*prioridades, (*qtdPrioridades + 1) * sizeof(int));
+void adicionarPrioridade(Pedido* p) {
+    if (!p) return;
+
+    int* novaLista = realloc(
+        p->prioridades,
+        (p->qtdPrioridades + 1) * sizeof(int)
+    );
+
     if (!novaLista) return;
 
-    *prioridades = novaLista;
-
-    (*prioridades)[*qtdPrioridades] = ptr_p->idPedido;
-    (*qtdPrioridades)++;
+    p->prioridades = novaLista;
+    p->prioridades[p->qtdPrioridades] = p->idPedido;
+    p->qtdPrioridades++;
 }
 
-void removerPrioridade(int id, int** prioridades, int* qtdPrioridades) {
+
+void removerPrioridade(Pedido* p, int idPedido) {
+    if (!p || p->qtdPrioridades == 0) return;
+
     int pos = -1;
 
-    for (int i = 0; i < *qtdPrioridades; i++) {
-        if ((*prioridades)[i] == id) {
+    for (int i = 0; i < p->qtdPrioridades; i++) {
+        if (p->prioridades[i] == idPedido) {
             pos = i;
             break;
         }
@@ -141,25 +149,28 @@ void removerPrioridade(int id, int** prioridades, int* qtdPrioridades) {
 
     if (pos == -1) return;
 
-    //move pra esquerd
-    for (int i = pos; i < *qtdPrioridades - 1; i++) {
-        (*prioridades)[i] = (*prioridades)[i + 1];
+    for (int i = pos; i < p->qtdPrioridades - 1; i++) {
+        p->prioridades[i] = p->prioridades[i + 1];
     }
 
-    (*qtdPrioridades)--;
+    p->qtdPrioridades--;
 
-    if (*qtdPrioridades == 0) {
-        free(*prioridades);
-        *prioridades = NULL;
+    if (p->qtdPrioridades == 0) {
+        free(p->prioridades);
+        p->prioridades = NULL;
         return;
     }
 
-    // reduz o tamanho do vet
-    int* novaLista = realloc(*prioridades, (*qtdPrioridades) * sizeof(int));
+    int* novaLista = realloc(
+        p->prioridades,
+        p->qtdPrioridades * sizeof(int)
+    );
+
     if (novaLista) {
-        *prioridades = novaLista;
+        p->prioridades = novaLista;
     }
 }
+
 
 void imprimirPedido(const Pedido* ptr_p) {
     if (!ptr_p) {
